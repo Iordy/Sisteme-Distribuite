@@ -1,0 +1,14 @@
+{
+    "problem1": {
+      "min_array_size": 3,
+      "max_array_size": 10
+    },
+    "problem6": {
+      "default_shift": 0,
+      "k": 3
+    },
+    "problem11": {
+      "k": 4
+    }
+  
+}
