@@ -1,8 +1,0 @@
-{
-    "server": {
-      "max_clients": 5,
-      "max_array_size": 20,
-      "timeout_seconds": 3,
-      "max_go_routines": 10
-    }
-}

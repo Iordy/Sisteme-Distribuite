@@ -39,32 +39,6 @@ type Config struct {
 		Problem7 struct {
 			EncodedText string `json:"encoded_text"`
 		} `json:"problem7"`
-		Problem8 struct {
-			InputArray []int `json:"input_array"`
-		} `json:"problem8"`
-		Problem9 struct {
-			InputArray []string `json:"input_array"`
-		} `json:"problem9"`
-		Problem10 struct {
-			InputArray []string `json:"input_array"`
-		} `json:"problem10"`
-		Problem11 struct {
-			K          int   `json:"k"`
-			InputArray []int `json:"input_array"`
-		} `json:"problem11"`
-		Problem12 struct {
-			InputArray []int `json:"input_array"`
-		} `json:"problem12"`
-		Problem13 struct {
-			Range        []int `json:"range"`
-			ComplexArray []int `json:"complex_array"`
-		} `json:"problem13"`
-		Problem14 struct {
-			InputArray []string `json:"input_array"`
-		} `json:"problem14"`
-		Problem15 struct {
-			InputArray []string `json:"input_array"`
-		} `json:"problem15"`
 	} `json:"problems"`
 }
 
@@ -160,9 +134,61 @@ func clientTwo(counter int, config Config) {
 	makeRequest(requestBody, "http://localhost:8080/solve")
 
 }
+func clientThree(counter int, config Config) {
 
-func clientThree() {
-	//to do
+	if len(config.Problems.Problem3.InputArray) == 0 {
+		return
+	}
+
+	numbers := config.Problems.Problem3.InputArray
+
+	requestBody := map[string]interface{}{
+		"problem":     "problem3",
+		"input_array": numbers,
+		"client_id":   counter,
+	}
+
+	makeRequest(requestBody, "http://localhost:8080/solve")
+}
+
+func clientFour(counter int, config Config) {
+
+	if len(config.Problems.Problem4.Range) != 2 || len(config.Problems.Problem4.InputArray) == 0 {
+		fmt.Printf("Client %d: Invalid configuration for Problem4.\n", counter)
+		return
+	}
+
+	inputArray := []interface{}{
+		config.Problems.Problem4.Range[0],
+		config.Problems.Problem4.Range[1],
+	}
+	for _, num := range config.Problems.Problem4.InputArray {
+		inputArray = append(inputArray, num)
+	}
+
+	requestBody := map[string]interface{}{
+		"problem":     "problem4",
+		"input_array": inputArray,
+		"client_id":   counter,
+	}
+
+	makeRequest(requestBody, "http://localhost:8080/solve")
+}
+
+func clientFive(counter int, config Config) {
+
+	if len(config.Problems.Problem5.InputArray) == 0 {
+		fmt.Printf("Client %d: Invalid configuration for Problem5.\n", counter)
+		return
+	}
+
+	requestBody := map[string]interface{}{
+		"problem":     "problem5",
+		"input_array": config.Problems.Problem5.InputArray,
+		"client_id":   counter,
+	}
+
+	makeRequest(requestBody, "http://localhost:8080/solve")
 }
 
 func main() {
@@ -170,7 +196,7 @@ func main() {
 	var globalClientCounter int32 = 0
 
 	config := Config{}
-	config, err := readFromInputFile("/Users/andreiiordache/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Facultate/Anul III/Sisteme Distribuite /tema1/clients_config.json")
+	config, err := readFromInputFile("/Users/andrei/Documents/GitHub/Sisteme-Distribuite/tema1/clients_config.json")
 	if err != nil {
 		fmt.Println("Error reading from input file:", err)
 		return
@@ -178,7 +204,7 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -187,12 +213,39 @@ func main() {
 		}()
 	}
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			clientID := atomic.AddInt32(&globalClientCounter, 1)
 			clientTwo(int(clientID), config)
+		}()
+	}
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			clientID := atomic.AddInt32(&globalClientCounter, 1)
+			clientThree(int(clientID), config)
+		}()
+	}
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			clientID := atomic.AddInt32(&globalClientCounter, 1)
+			clientFour(int(clientID), config)
+		}()
+	}
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			clientID := atomic.AddInt32(&globalClientCounter, 1)
+			clientFive(int(clientID), config)
 		}()
 	}
 

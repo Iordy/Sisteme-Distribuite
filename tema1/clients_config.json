@@ -17,40 +17,6 @@
     },
     "problem5": {
       "input_array": ["2dasdas", "12", "dasdas", "1010", "101"]
-    },
-    "problem6": {
-      "default_shift": "RIGHT",
-      "k": 3,
-      "input_array": ["abcdef", "xyzabc"]
-    },
-    "problem7": {
-      "encoded_text": "1G11o1L"
-    },
-    "problem8": {
-      "input_array": [23, 17, 15, 3, 18]
-    },
-    "problem9": {
-      "input_array": ["mama", "iris", "bunica", "ala"]
-    },
-    "problem10": {
-      "input_array": ["24", "16", "8", "aaa", "bbb"]
-    },
-    "problem11": {
-      "k": 2,
-      "input_array": [1234, 3456, 4567]
-    },
-    "problem12": {
-      "input_array": [23, 43, 26, 74]
-    },
-    "problem13": {
-      "range": [3, 10],
-      "complex_array": [3, 4, 5, 6]
-    },
-    "problem14": {
-      "input_array": ["Ceva12!@", "asa212", "dasdas"]
-    },
-    "problem15": {
-      "input_array": ["a", "b", "e", "3", "!", "A"]
     }
   }
 }

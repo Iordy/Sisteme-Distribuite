@@ -4,112 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"net/http"
-	"os"
-	"regexp"
-	"strconv"
 )
-
-type Config struct {
-	Server struct {
-		MaxClients     int `json:"max_clients"`
-		MaxArraySize   int `json:"max_array_size"`
-		TimeoutSeconds int `json:"timeout_seconds"`
-		MaxGoRoutines  int `json:"max_go_routines"`
-	} `json:"server"`
-}
-
-func readFromInputFile(path string) (Config, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return Config{}, err
-	}
-	defer file.Close()
-
-	var config Config
-	err = json.NewDecoder(file).Decode(&config)
-	if err != nil {
-		return Config{}, err
-	}
-
-	return config, nil
-}
 
 func appendToResponse(response *map[string]interface{}, message string) {
 	(*response)["messages"] = append((*response)["messages"].([]string), message)
-}
-
-func Problem1(data map[string]interface{}) ([]string, error) {
-
-	inputArray, ok := data["input_array"]
-	if !ok {
-		message := "Error: Missing input_array"
-		return nil, fmt.Errorf(message)
-	}
-
-	array, ok := inputArray.([]interface{})
-	words := make([]string, len(array))
-	for i, v := range array {
-		word, ok := v.(string)
-		if !ok {
-			message := fmt.Sprintf("Error: input_array element at index %d is not a string", i)
-			return nil, fmt.Errorf(message)
-		}
-		words[i] = word
-	}
-
-	outputArray := make([]string, len(words[0]))
-	for i := 0; i < len(words[0]); i++ {
-		result := ""
-		for _, word := range words {
-			result += string(word[i])
-		}
-		outputArray[i] = result
-	}
-
-	return outputArray, nil
-}
-
-func Problem2(data map[string]interface{}) (string, error) {
-
-	inputArray, ok := data["input_array"]
-	if !ok {
-		return "", fmt.Errorf("Error: Missing input_array")
-	}
-
-	array, ok := inputArray.([]interface{})
-	if !ok {
-		return "", fmt.Errorf("Error: Invalid input_array format")
-	}
-
-	count := 0
-	re := regexp.MustCompile("[0-9]+")
-
-	for _, item := range array {
-
-		item, ok := item.(string)
-
-		if !ok {
-			return "", fmt.Errorf("Error: Invalid input_array format")
-		}
-
-		digits := re.FindAllString(item, -1)
-
-		for _, digit := range digits {
-			num, err := strconv.Atoi(digit)
-			if err != nil {
-				return "", fmt.Errorf("Error: Unable to convert digit '%s' to integer", digit)
-			}
-
-			sqrt := int(math.Sqrt(float64(num)))
-			if sqrt*sqrt == num {
-				count++
-			}
-		}
-	}
-
-	return fmt.Sprintf("%d perfect squares found", count), nil
 }
 
 func sendResponseWithJSON(w http.ResponseWriter, statusCode int, response map[string]interface{}) {
@@ -176,12 +75,28 @@ func processProblem(data map[string]interface{}, response *map[string]interface{
 			appendToResponse(response, "Error solving problem2.")
 			return "", err
 		}
-		appendToResponse(response, "Problem2 processed successfully.")
 		return result, nil
 	case "problem3":
-		//to do
-		appendToResponse(response, "Problem3 processed successfully.")
-		return "Problem3 solved (example placeholder)", nil
+		result, err := Problem3(data)
+		if err != nil {
+			appendToResponse(response, "Error solving problem3.")
+			return "", err
+		}
+		return result, nil
+	case "problem4":
+		result, err := Problem4(data)
+		if err != nil {
+			appendToResponse(response, "Error solving problem4.")
+			return "", err
+		}
+		return result, nil
+	case "problem5":
+		result, err := Problem5(data)
+		if err != nil {
+			appendToResponse(response, "Error solving problem5.")
+			return "", err
+		}
+		return result, nil
 	default:
 		appendToResponse(response, "Unknown problem.")
 		return "", fmt.Errorf("unknown problem")
